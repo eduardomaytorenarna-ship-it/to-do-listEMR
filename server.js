@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
@@ -30,6 +30,11 @@ const createTodoValidator = [
   handleValidation
 ];
 
+const idParamValidator = [
+  param('id').isUUID().withMessage('id debe ser un UUID válido'),
+  handleValidation
+];
+
 app.post('/api/todos', createTodoValidator, (req, res) => {
   const { title } = req.body;
   const newTodo = {
@@ -44,6 +49,12 @@ app.post('/api/todos', createTodoValidator, (req, res) => {
 
 app.get('/api/todos', (req, res) => {
   return ok(res, todos);
+});
+
+app.get('/api/todos/:id', idParamValidator, (req, res) => {
+  const todo = todos.find(t => t.id === req.params.id);
+  if (!todo) return fail(res, 'Tarea no encontrada', 404);
+  return ok(res, todo);
 });
 
 const PORT = process.env.PORT || 3000;
