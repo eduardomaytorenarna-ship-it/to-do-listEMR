@@ -86,6 +86,13 @@ app.put('/api/todos/:id', idParamValidator, updateTodoValidator, (req, res) => {
   return ok(res, updated);
 });
 
+app.delete('/api/todos/:id', idParamValidator, (req, res) => {
+  const idx = todos.findIndex(t => t.id === req.params.id);
+  if (idx === -1) return fail(res, 'Tarea no encontrada', 404);
+  const removed = todos.splice(idx, 1)[0];
+  return ok(res, { id: removed.id, message: 'Tarea eliminada' });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
 
