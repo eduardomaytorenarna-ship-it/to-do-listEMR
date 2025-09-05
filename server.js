@@ -42,5 +42,10 @@ app.post('/api/todos', createTodoValidator, (req, res) => {
   return ok(res, newTodo, 201);
 });
 
+app.get('/api/todos', (req, res) => {
+  return ok(res, todos);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+
